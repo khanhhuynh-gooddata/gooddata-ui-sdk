@@ -1,4 +1,4 @@
-// (C) 2007-2022 GoodData Corporation
+// (C) 2007-2023 GoodData Corporation
 import clone from "lodash/clone";
 import includes from "lodash/includes";
 import isNil from "lodash/isNil";
@@ -80,6 +80,11 @@ export const isPieOrDonutChart = (type: string): boolean => isPieChart(type) || 
  * @internal
  */
 export const isAreaChart = isEqual(VisualizationTypes.AREA);
+
+/**
+ * @internal
+ */
+export const isWaterfallChart = isEqual(VisualizationTypes.WATERFALL);
 
 /**
  * @internal

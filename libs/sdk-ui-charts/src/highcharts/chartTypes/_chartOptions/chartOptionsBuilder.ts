@@ -1,4 +1,4 @@
-// (C) 2007-2022 GoodData Corporation
+// (C) 2007-2023 GoodData Corporation
 import { IDataView } from "@gooddata/sdk-backend-spi";
 import { ITheme, IMeasureDescriptor, IMeasureGroupDescriptor } from "@gooddata/sdk-model";
 import invariant from "ts-invariant";
@@ -6,6 +6,7 @@ import invariant from "ts-invariant";
 import {
     BucketNames,
     DataViewFacade,
+    DefaultColorPalette,
     getMappingHeaderFormattedName,
     IHeaderPredicate,
 } from "@gooddata/sdk-ui";
@@ -20,7 +21,12 @@ import {
 import { findAttributeInDimension, findMeasureGroupInDimensions } from "../_util/executionResultHelper";
 import { IUnwrappedAttributeHeadersWithItems } from "../../typings/mess";
 
-import { IColorStrategy, valueWithEmptyHandling } from "@gooddata/sdk-ui-vis-commons";
+import {
+    getColorByGuid,
+    getRgbStringFromRGB,
+    IColorStrategy,
+    valueWithEmptyHandling,
+} from "@gooddata/sdk-ui-vis-commons";
 
 import {
     isAreaChart,
@@ -35,6 +41,7 @@ import {
     isTreemap,
     stringifyChartTypes,
     unwrap,
+    isWaterfallChart,
 } from "../_util/common";
 import { setMeasuresToSecondaryAxis } from "./dualAxis";
 import {
@@ -434,6 +441,43 @@ export function getChartOptions(
             (_category: any, dataPointIndex: number) => categories[indexSortOrder[dataPointIndex]],
         );
         series[0].data = sortedDataPoints;
+    }
+
+    if (isWaterfallChart(type)) {
+        const colors = colorStrategy.getColorAssignment();
+        series[0].data.forEach((it) => {
+            if (it.y < 0) {
+                it.color = getRgbStringFromRGB(
+                    getColorByGuid(
+                        config.colorPalette || DefaultColorPalette,
+                        colors[0]?.color?.value as string,
+                        0,
+                    ) as any,
+                );
+            } else {
+                it.color = getRgbStringFromRGB(
+                    getColorByGuid(
+                        config.colorPalette || DefaultColorPalette,
+                        colors[1]?.color?.value as string,
+                        0,
+                    ) as any,
+                );
+            }
+        });
+
+        series[0].data.push({
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            isSum: true,
+            color: getRgbStringFromRGB(
+                getColorByGuid(
+                    config.colorPalette || DefaultColorPalette,
+                    colors[2].color.value as string,
+                    0,
+                ) as any,
+            ),
+        });
+        categories.push("Sum");
     }
 
     const colorAssignments = colorStrategy.getColorAssignment();

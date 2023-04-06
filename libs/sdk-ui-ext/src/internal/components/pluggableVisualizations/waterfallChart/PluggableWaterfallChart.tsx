@@ -1,5 +1,6 @@
 // (C) 2019-2023 GoodData Corporation
-import set from "lodash/set";
+import React from "react";
+import { set } from "lodash";
 import { BucketNames, VisualizationTypes } from "@gooddata/sdk-ui";
 import { IExtendedReferencePoint, IReferencePoint, IVisConstruct } from "../../../interfaces/Visualization";
 import cloneDeep from "lodash/cloneDeep";
@@ -7,6 +8,8 @@ import { DEFAULT_WATERFALL_UI_CONFIG, UICONFIG } from "../../../constants/uiConf
 import { PluggableBaseChart } from "../baseChart/PluggableBaseChart";
 import { BUCKETS } from "../../../constants/bucket";
 import { getAttributeItems, getMeasureItems, setBucketTitles } from "../../../utils/bucketHelper";
+import { IInsightDefinition } from "@gooddata/sdk-model";
+import WaterfallChartConfigurationPanel from "../../configurationPanels/WaterfallChartConfigurationPanel";
 
 const measuresIcon = "local:waterfall/bucket-title-measures.svg";
 const viewIcon = "local:waterfall/bucket-title-view.svg";
@@ -64,6 +67,30 @@ export class PluggableWaterfallChart extends PluggableBaseChart {
         if (isMultiMeasures) {
             set(extendedReferencePoint, [UICONFIG, BUCKETS, BucketNames.VIEW, "enabled"], false);
             set(extendedReferencePoint, [UICONFIG, BUCKETS, BucketNames.VIEW, "itemsLimit"], 0);
+        }
+    }
+
+    protected renderConfigurationPanel(insight: IInsightDefinition): void {
+        const configPanelElement = this.getConfigPanelElement();
+
+        if (configPanelElement) {
+            this.renderFun(
+                <WaterfallChartConfigurationPanel
+                    locale={this.locale}
+                    references={this.references}
+                    properties={this.visualizationProperties}
+                    propertiesMeta={this.propertiesMeta}
+                    insight={insight}
+                    colors={this.colors}
+                    pushData={this.handlePushData}
+                    type={this.type}
+                    isError={this.getIsError()}
+                    isLoading={this.isLoading}
+                    featureFlags={this.featureFlags}
+                    axis={this.axis}
+                />,
+                configPanelElement,
+            );
         }
     }
 }

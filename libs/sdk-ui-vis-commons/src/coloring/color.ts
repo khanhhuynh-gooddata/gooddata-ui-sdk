@@ -214,6 +214,10 @@ export function getColorMappingPredicate(testValue: string): IHeaderPredicate {
                 : false;
         }
 
+        if ((header as any).customHeader !== undefined) {
+            return testValue ? testValue === (header as any).customHeader.name : false;
+        }
+
         const headerLocalIdentifier = getMappingHeaderLocalIdentifier(header);
         return headerLocalIdentifier ? headerLocalIdentifier === testValue : false;
     };

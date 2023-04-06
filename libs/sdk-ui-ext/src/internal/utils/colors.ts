@@ -96,6 +96,8 @@ export function getProperties(
             ? item.attributeHeader.uri
             : item.attributeHeader.identifier;
         return mergeColorMappingToProperties(properties, id, color);
+    } else if ((item as any).customHeader !== undefined) {
+        return mergeColorMappingToProperties(properties, (item as any).customHeader.name, color);
     }
 
     return {};

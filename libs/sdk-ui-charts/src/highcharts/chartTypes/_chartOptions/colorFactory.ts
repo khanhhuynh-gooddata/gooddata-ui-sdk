@@ -1,4 +1,4 @@
-// (C) 2007-2022 GoodData Corporation
+// (C) 2007-2023 GoodData Corporation
 import { IColorPalette, ITheme } from "@gooddata/sdk-model";
 import { DataViewFacade, DefaultColorPalette, VisualizationTypes } from "@gooddata/sdk-ui";
 import { IColorMapping } from "../../../interfaces";
@@ -9,6 +9,7 @@ import {
     isOneOfTypes,
     isScatterPlot,
     isTreemap,
+    isWaterfallChart,
 } from "../_util/common";
 import BulletChartColorStrategy from "../bulletChart/bulletChartColoring";
 import { MeasureColorStrategy } from "../_chartColoring/measure";
@@ -17,6 +18,7 @@ import { HeatmapColorStrategy } from "../heatmap/heatmapColoring";
 import { TreemapColorStrategy } from "../treemap/treemapColoring";
 import { BubbleChartColorStrategy } from "../bubbleChart/bubbleChartColoring";
 import { ScatterPlotColorStrategy } from "../scatterPlot/scatterPlotColoring";
+import { WaterfallChartColorStrategy } from "../waterfallChart/waterfallChartColoring";
 
 const attributeChartSupportedTypes = [
     VisualizationTypes.PIE,
@@ -89,6 +91,17 @@ export class ColorFactory {
 
         if (isBulletChart(type)) {
             return new BulletChartColorStrategy(
+                colorPalette,
+                colorMapping,
+                viewByAttribute,
+                stackByAttribute,
+                dv,
+                theme,
+            );
+        }
+
+        if (isWaterfallChart(type)) {
+            return new WaterfallChartColorStrategy(
                 colorPalette,
                 colorMapping,
                 viewByAttribute,
