@@ -67,7 +67,9 @@ export const ColumnChart: (props: IColumnChartProps) => JSX.Element;
 export const ComboChart: (props: IComboChartProps) => JSX.Element;
 
 // @internal
-export const CoreHeadline: React_2.ComponentClass<ICoreChartProps, any>;
+export const CoreHeadline: React_2.ComponentClass<ICoreChartProps & {
+    subVisType?: ChartType;
+}, any>;
 
 // @internal
 export const CoreXirr: React_2.ComponentClass<ICoreChartProps, any>;

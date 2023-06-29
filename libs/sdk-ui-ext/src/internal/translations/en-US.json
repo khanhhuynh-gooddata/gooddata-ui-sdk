@@ -264,6 +264,11 @@
         "comment": "",
         "limit": 0
     },
+    "dashboard.bucket.stack_subtitle.headline": {
+        "value": "view by",
+        "comment": "",
+        "limit": 0
+    },
     "dashboard.bucket.combo.subtitle.column": {
         "value": "as columns",
         "comment": "Display measures in column chart = 'as columns'.",
@@ -446,6 +451,11 @@
     },
     "dashboard.bucket.stack_title.heatmap": {
         "value": "Columns",
+        "comment": "",
+        "limit": 0
+    },
+    "dashboard.bucket.stack_title.headline": {
+        "value": "Attribute",
         "comment": "",
         "limit": 0
     },

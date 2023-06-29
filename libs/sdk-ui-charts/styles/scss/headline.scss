@@ -8,7 +8,7 @@
 .headline {
     text-align: center;
     width: 100%;
-    height: 100%;
+    height: 57px;
 
     .headline-primary-item {
         @include typo-mixins.gd-heading-1;
@@ -174,6 +174,18 @@
             padding: 0;
             font-size: 12px;
             white-space: nowrap;
+        }
+    }
+}
+
+.headline-wrapper {
+    .visualization-container-measure-wrap {
+        position: relative;
+
+        .viz-static-legend-wrap {
+            position: absolute;
+            top: 25px;
+            left: -5px;
         }
     }
 }

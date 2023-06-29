@@ -12,7 +12,6 @@ import {
     insightAttributes,
     insightBucket,
     MeasureGroupIdentifier,
-    newDimension,
     newTwoDimensional,
 } from "@gooddata/sdk-model";
 import { BucketNames, VisType, VisualizationTypes } from "@gooddata/sdk-ui";
@@ -81,8 +80,11 @@ function getLineDimensions(insight: IInsightDefinition): IDimension[] {
         : newTwoDimensional([MeasureGroupIdentifier], trendAttributes);
 }
 
-export function getHeadlinesDimensions(): IDimension[] {
-    return [newDimension([MeasureGroupIdentifier])];
+export function getHeadlinesDimensions(insight: IInsightDefinition, subVisType?: VisType): IDimension[] {
+    const viewBys = safeBucketAttributes(insight, BucketNames.STACK)
+    return subVisType === VisualizationTypes.BAR
+        ? newTwoDimensional(viewBys, [MeasureGroupIdentifier])
+        : newTwoDimensional([MeasureGroupIdentifier], viewBys);
 }
 
 function getScatterDimensions(insight: IInsightDefinition): IDimension[] {
@@ -122,9 +124,11 @@ function getSankeyDimensions(insight: IInsightDefinition): IDimension[] {
  *
  * @param insight - insight being visualized
  * @param type - visualization type string
+ * @param subVisType - sub vis type
+ *
  * @internal
  */
-export function generateDimensions(insight: IInsightDefinition, type: VisType): IDimension[] {
+export function generateDimensions(insight: IInsightDefinition, type: VisType, subVisType?: VisType): IDimension[] {
     switch (type) {
         case VisualizationTypes.TABLE:
             return getPivotTableDimensions(insight);
@@ -155,7 +159,7 @@ export function generateDimensions(insight: IInsightDefinition, type: VisType): 
             return getBulletComboDimensions(insight);
 
         case VisualizationTypes.HEADLINE:
-            return getHeadlinesDimensions();
+            return getHeadlinesDimensions(insight, subVisType);
 
         case VisualizationTypes.SCATTER:
             return getScatterDimensions(insight);

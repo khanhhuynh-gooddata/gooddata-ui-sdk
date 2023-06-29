@@ -73,10 +73,12 @@ function createTertiaryItem(executionData: IHeadlineExecutionData[], intl: IntlS
 
 function getExecutionData(dv: DataViewFacade): IHeadlineExecutionData[] {
     const headerItems = dv.meta().measureDescriptors();
-    const data = dv.rawData().singleDimData();
+    const data = dv.rawData().data().flat().reduce((result: number, value: number) => {
+        return result + value;
+    }, 0);
 
-    return headerItems.map((item, index) => {
-        const value = data[index];
+    return headerItems.map((item, _index) => {
+        const value = data;
 
         invariant(value !== undefined, "Undefined execution value data for headline transformation");
         invariant(item.measureHeaderItem, "Missing expected measureHeaderItem");

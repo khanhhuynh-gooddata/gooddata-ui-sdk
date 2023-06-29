@@ -9,6 +9,7 @@ import {
     findDerivedBucketItems,
     findMasterBucketItem,
     findMasterBucketItems,
+    getAllAttributeItems,
 } from "../../../utils/bucketHelper.js";
 
 export function findSecondMasterMeasure(allMeasures: IBucketItem[]): IBucketItem {
@@ -74,6 +75,10 @@ export function setHeadlineRefPointBuckets(
             localIdentifier: BucketNames.SECONDARY_MEASURES,
             items: secondaryMeasure ? [secondaryMeasure] : [],
         },
+        {
+            localIdentifier: BucketNames.STACK,
+            items: getAllAttributeItems(extendedReferencePoint.buckets),
+        }
     ];
 
     return newReferencePoint;

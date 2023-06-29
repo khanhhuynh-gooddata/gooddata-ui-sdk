@@ -287,7 +287,7 @@ export class HighChartsRenderer extends React.PureComponent<
             ];
         }
 
-        return {
+        let config = {
             ...chartConfig,
             chart: {
                 ...chartConfig?.chart,
@@ -313,7 +313,118 @@ export class HighChartsRenderer extends React.PureComponent<
             xAxis: (xAxis as any).map((ax: XAxisOptions) => ({
                 ...ax,
             })),
-        };
+        }
+
+        if (chart.type === VisualizationTypes.AREA) {
+            config = {
+                ...config,
+                chart: {
+                    ...config.chart,
+                    height: "75px",
+                },
+                plotOptions: {
+                    ...config.plotOptions,
+                    area: {
+                        ...config.plotOptions.area,
+                        lineWidth: 2,
+                        marker: {
+                            enabled: false // hidden point maker,
+                        },
+                        fillColor: {
+                            linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                            stops: [
+                                [0, "#13B1E2"], // start
+                                [0.9, "#fff"], // middle
+                                [1, "#fff"], // middle
+                            ]
+                        },
+                    }
+                },
+                xAxis: [
+                    {
+                        lineWidth: 0,
+                        gridLineWidth: 0,
+                        labels: {
+                            enabled: false,
+                            allowOverlap: false
+                        },
+                        title: {
+                            text: null,
+                        },
+                        tickLength: 0
+                    },
+                ],
+                yAxis: [
+                    {
+                        lineWidth: 0,
+                        gridLineWidth: 0,
+                        stackLabels: {
+                            enabled: false,
+                            allowOverlap: false
+                        },
+                        labels: {
+                            enabled: false
+                        },
+                        reversedStacks: false,
+                        title: {
+                            text: null
+                        },
+                        tickLength: 0
+                    }
+                ]
+            }
+        }
+
+        if (chart.type === VisualizationTypes.BAR) {
+            config = {
+                ...config,
+                series: [
+                    ...(config.series.map(it => ({
+                        ...it,
+                        stacking: "percent",
+                        stack: 0,
+                    }))),
+                ],
+                chart: {
+                    ...config.chart,
+                    height: "44px",
+                },
+                xAxis: [
+                    {
+                        lineWidth: 0,
+                        gridLineWidth: 0,
+                        labels: {
+                            enabled: false,
+                            allowOverlap: false
+                        },
+                        title: {
+                            text: null,
+                        },
+                        tickLength: 0
+                    },
+                ],
+                yAxis: [
+                    {
+                        lineWidth: 0,
+                        gridLineWidth: 0,
+                        stackLabels: {
+                            enabled: false,
+                            allowOverlap: false
+                        },
+                        labels: {
+                            enabled: false
+                        },
+                        reversedStacks: false,
+                        title: {
+                            text: null
+                        },
+                        tickLength: 0
+                    }
+                ]
+            }
+        }
+
+        return config;
     }
 
     public renderLegend(
@@ -417,6 +528,10 @@ export class HighChartsRenderer extends React.PureComponent<
         const legendDetails = getLegendDetails(legend.position, legend.responsive, legendDetailOptions);
         if (!legendDetails) {
             return null;
+        }
+
+        if (chartOptions.type === VisualizationTypes.BAR) {
+            legendDetails.position = "bottom";
         }
 
         const classes = cx(

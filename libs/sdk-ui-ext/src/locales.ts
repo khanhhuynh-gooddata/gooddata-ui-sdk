@@ -57,6 +57,7 @@ export const titles: Record<string, MessageDescriptor> = defineMessages({
     stack_bar: { id: "dashboard.bucket.stack_title.bar" },
     stack_area: { id: "dashboard.bucket.stack_title.area" },
     stack_heatmap: { id: "dashboard.bucket.stack_title.heatmap" },
+    stack_headline: { id: "dashboard.bucket.stack_title.headline" },
     segment_line: { id: "dashboard.bucket.segment_title.line" },
     segment_treemap: { id: "dashboard.bucket.segment_title.treemap" },
     segment_pushpin: { id: "dashboard.bucket.segment_title.pushpin" },
@@ -81,6 +82,7 @@ export const subtitles: Record<string, MessageDescriptor> = defineMessages({
     attribute_to_sankey: { id: "dashboard.bucket.attribute_to_subtitle.sankey" },
     attribute_from_dependencywheel: { id: "dashboard.bucket.attribute_from_subtitle.dependencywheel" },
     attribute_to_dependencywheel: { id: "dashboard.bucket.attribute_to_subtitle.dependencywheel" },
+    stack_headline: { id: "dashboard.bucket.stack_subtitle.headline" },
     size_pushpin: { id: "dashboard.bucket.size_subtitle.pushpin" },
     color_pushpin: { id: "dashboard.bucket.color_subtitle.pushpin" },
 });

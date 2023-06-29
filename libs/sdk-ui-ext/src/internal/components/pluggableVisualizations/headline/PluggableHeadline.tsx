@@ -6,12 +6,10 @@ import {
     IInsightDefinition,
     insightBucket,
     insightHasDataDefined,
-    MeasureGroupIdentifier,
-    newDimension,
     ISettings,
 } from "@gooddata/sdk-model";
 
-import { BucketNames } from "@gooddata/sdk-ui";
+import { BucketNames, ChartType, VisualizationTypes } from "@gooddata/sdk-ui";
 import { CoreHeadline, updateConfigWithSettings } from "@gooddata/sdk-ui-charts";
 import React from "react";
 import { METRIC } from "../../../constants/bucket.js";
@@ -28,7 +26,7 @@ import {
 
 import { configureOverTimeComparison, configurePercent } from "../../../utils/bucketConfig.js";
 import {
-    findDerivedBucketItem,
+    findDerivedBucketItem, getAllAttributeItems,
     getAllItemsByType,
     hasDerivedBucketItems,
     isDerivedBucketItem,
@@ -57,6 +55,7 @@ import {
     tryToMapForeignBuckets,
 } from "./headlineBucketHelper.js";
 import cloneDeep from "lodash/cloneDeep.js";
+import { generateDimensions } from "../../../utils/dimensions.js";
 
 /**
  * PluggableHeadline
@@ -86,6 +85,7 @@ import cloneDeep from "lodash/cloneDeep.js";
 export class PluggableHeadline extends AbstractPluggableVisualization {
     private readonly settings?: ISettings;
     private readonly renderFun: RenderFunction;
+    private subVisType: ChartType;
 
     constructor(props: IVisConstruct) {
         super(props);
@@ -141,6 +141,7 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
             this.supportedPropertiesList,
         );
         newReferencePoint = removeSort(newReferencePoint);
+        this.subVisType = this.getSubVisTypeByReferencePoint(newReferencePoint);
 
         return Promise.resolve(sanitizeFilters(newReferencePoint));
     }
@@ -154,7 +155,7 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
 
         return executionFactory
             .forInsight(insight)
-            .withDimensions(newDimension([MeasureGroupIdentifier]))
+            .withDimensions(...generateDimensions(insight, VisualizationTypes.HEADLINE, this.subVisType ?? this.getSubVisTypeByInsight(insight)))
             .withDateFormat(dateFormat)
             .withExecConfig(executionConfig);
     }
@@ -197,6 +198,7 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
                 afterRender={this.afterRender}
                 onLoadingChanged={this.onLoadingChanged}
                 pushData={this.pushData}
+                subVisType={this.subVisType ?? this.getSubVisTypeByInsight(insight)}
                 onError={this.onError}
                 LoadingComponent={null}
                 ErrorComponent={null}
@@ -247,5 +249,36 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
 
             return resultItems;
         }, []);
+    }
+
+    private getSubVisTypeByReferencePoint(referencePoint: IReferencePoint): ChartType {
+        const attributes = getAllAttributeItems(referencePoint.buckets) || [];
+        const attribute = attributes[0];
+        if (attribute?.type === "date") {
+            return VisualizationTypes.AREA;
+        } else {
+            return VisualizationTypes.BAR;
+        }
+    }
+
+    private getSubVisTypeByInsight(insight: IInsightDefinition) {
+        const stack = insight?.insight?.buckets.find(it => it.localIdentifier === "stack");
+        if (stack?.items) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const identifier = stack.items[0]?.attribute?.displayForm?.identifier as string;
+            /**
+             * ==============consider to store sub visualization type===============
+             */
+            return (
+                identifier?.indexOf("quarter") >= 0 ||
+                identifier?.indexOf("year") >= 0 ||
+                identifier?.indexOf("month") >= 0 ||
+                identifier?.indexOf("week") >= 0
+            ) ? VisualizationTypes.AREA : VisualizationTypes.BAR;
+        }
+
+        return VisualizationTypes.BAR;
+
     }
 }

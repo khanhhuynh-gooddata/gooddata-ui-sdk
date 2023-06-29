@@ -1,5 +1,6 @@
 // (C) 2007-2022 GoodData Corporation
 import React from "react";
+import noop from "lodash/noop.js";
 import {
     newErrorMapping,
     IErrorDescriptors,
@@ -7,12 +8,20 @@ import {
     ErrorCodes,
     ILoadingInjectedProps,
     withEntireDataView,
+    ITranslationsComponentProps,
+    IntlTranslationsProvider,
+    ChartType,
+    VisualizationTypes,
 } from "@gooddata/sdk-ui";
 import { ICoreChartProps } from "../../interfaces/index.js";
 import HeadlineTransformation from "./internal/HeadlineTransformation.js";
 import { defaultCoreChartProps } from "../_commons/defaultProps.js";
+import { ChartTransformation } from "../../highcharts/index.js";
 
-type Props = ICoreChartProps & ILoadingInjectedProps;
+type Props = ICoreChartProps & ILoadingInjectedProps & {
+    subVisType?: ChartType;
+};
+
 export class HeadlineStateless extends React.Component<Props> {
     public static defaultProps = defaultCoreChartProps;
 
@@ -48,17 +57,46 @@ export class HeadlineStateless extends React.Component<Props> {
     }
 
     protected renderVisualization(): JSX.Element {
-        const { afterRender, drillableItems, locale, dataView, onDrill, config } = this.props;
+        const { afterRender, subVisType, drillableItems, locale, dataView, onDrill, config, pushData, width } =
+            this.props;
+        const fullConfig = {
+            ...config,
+            type: subVisType,
+        };
+        const height = subVisType === VisualizationTypes.BAR ? 50 : 500;
 
         return (
             <IntlWrapper locale={locale}>
-                <HeadlineTransformation
-                    dataView={dataView}
-                    onAfterRender={afterRender}
-                    onDrill={onDrill}
-                    drillableItems={drillableItems}
-                    config={config}
-                />
+                <div className="headline-wrapper">
+                    <HeadlineTransformation
+                        dataView={dataView}
+                        onAfterRender={afterRender}
+                        onDrill={onDrill}
+                        drillableItems={drillableItems}
+                        config={config}
+                    />
+                    <IntlTranslationsProvider>
+                        {(translationProps: ITranslationsComponentProps) => {
+                            return (
+                                <ChartTransformation
+                                    height={height}
+                                    width={width}
+                                    config={fullConfig}
+                                    drillableItems={drillableItems}
+                                    locale={locale}
+                                    dataView={dataView}
+                                    afterRender={afterRender}
+                                    onDrill={onDrill}
+                                    onDataTooLarge={noop}
+                                    onNegativeValues={noop}
+                                    onLegendReady={noop}
+                                    pushData={pushData}
+                                    numericSymbols={translationProps.numericSymbols}
+                                />
+                            );
+                        }}
+                    </IntlTranslationsProvider>
+                </div>
             </IntlWrapper>
         );
     }
