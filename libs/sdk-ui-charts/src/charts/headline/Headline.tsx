@@ -1,5 +1,5 @@
 // (C) 2007-2022 GoodData Corporation
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IPreparedExecution } from "@gooddata/sdk-backend-spi";
 import {
     IBucket,
@@ -17,10 +17,11 @@ import {
     MeasureOrPlaceholder,
     NullableFiltersOrPlaceholders,
 } from "@gooddata/sdk-ui";
-import { IBucketChartProps, ICoreChartProps } from "../../interfaces/index.js";
-import { CoreHeadline } from "./CoreHeadline.js";
 import omit from "lodash/omit.js";
 import { invariant } from "ts-invariant";
+
+import { IBucketChartProps, ICoreChartProps } from "../../interfaces/index.js";
+import { CoreHeadline, ICoreHeadlineProps } from "./CoreHeadline.js";
 
 //
 // Public interface
@@ -38,8 +39,15 @@ export interface IHeadlineBucketProps {
     /**
      * Specify secondary measure whose value will be shown for comparison with the primary measure.
      * The change in percent between the two values will also be calculated and displayed.
+     *
+     * @deprecated this property is deprecated, use secondaryMeasures instead
      */
     secondaryMeasure?: MeasureOrPlaceholder;
+
+    /**
+     * Specify secondary measures whose values will be shown for comparison with the primary measure.
+     */
+    secondaryMeasures?: MeasureOrPlaceholder[];
 
     /**
      * Specify filters to apply on the data to chart.
@@ -81,8 +89,31 @@ export const Headline = (props: IHeadlineProps) => {
 };
 
 export function RenderHeadline(props: IHeadlineProps): JSX.Element {
-    invariant(props.primaryMeasure, "The property primaryMeasure must be specified.");
-    return <CoreHeadline {...toCoreHeadlineProps(props)} />;
+    const { backend, workspace, primaryMeasure } = props;
+    const [isEnableNewHeadline, setEnableNewHeadline] = useState<boolean>();
+
+    useEffect(() => {
+        invariant(primaryMeasure, "The property primaryMeasure must be specified.");
+    }, [primaryMeasure]);
+
+    // TODO - this block should be removed when removing FF enableNewHeadline.
+    useEffect(() => {
+        if (backend && workspace) {
+            backend
+                .workspace(workspace)
+                .settings()
+                .getSettingsForCurrentUser()
+                .then((featureFlags) => {
+                    // the logical or '!!' operator using to ensure
+                    // that the isEnableNewHeadline variable is either true or false ( not undefined or null )
+                    setEnableNewHeadline(!!featureFlags.enableNewHeadline);
+                });
+        }
+    }, [backend, workspace]);
+
+    return isEnableNewHeadline !== undefined
+        ? <CoreHeadline {...toCoreHeadlineProps(props, isEnableNewHeadline)} />
+        : null;
 }
 
 //
@@ -91,10 +122,15 @@ export function RenderHeadline(props: IHeadlineProps): JSX.Element {
 
 type IIrrelevantHeadlineProps = IHeadlineBucketProps & IBucketChartProps;
 type IHeadlineNonBucketProps = Subtract<IHeadlineProps, IIrrelevantHeadlineProps>;
+type CoreHeadlineProps = ICoreChartProps & ICoreHeadlineProps;
 
-export function toCoreHeadlineProps(props: IHeadlineProps): ICoreChartProps {
+export function toCoreHeadlineProps(props: IHeadlineProps, enableNewHeadline: boolean): CoreHeadlineProps {
+    const primaryMeasure = props.primaryMeasure as IMeasure;
+    const secondaryMeasures = [props.secondaryMeasure, ...(props.secondaryMeasures || [])] as IMeasure[];
+
     const buckets = [
-        newBucket(BucketNames.MEASURES, props.primaryMeasure as IMeasure, props.secondaryMeasure as IMeasure),
+        newBucket(BucketNames.MEASURES, primaryMeasure),
+        newBucket(BucketNames.SECONDARY_MEASURES, ...secondaryMeasures),
     ];
 
     const newProps: IHeadlineNonBucketProps = omit<IHeadlineProps, keyof IIrrelevantHeadlineProps>(props, [
@@ -106,6 +142,8 @@ export function toCoreHeadlineProps(props: IHeadlineProps): ICoreChartProps {
 
     return {
         ...newProps,
+        enableNewHeadline,
+        buckets,
         execution: createExecution(buckets, props),
         exportTitle: props.exportTitle || "Headline",
     };

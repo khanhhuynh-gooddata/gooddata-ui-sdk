@@ -12,7 +12,7 @@ import {
 
 import { getMeasureItems } from "../../../../utils/bucketHelper.js";
 import { IDrillableItem, OverTimeComparisonTypes, BucketNames } from "@gooddata/sdk-ui";
-import { CoreHeadline, ICoreChartProps } from "@gooddata/sdk-ui-charts";
+import { HeadlineWithEntireDataView, ICoreChartProps } from "@gooddata/sdk-ui-charts";
 import { dummyBackend } from "@gooddata/sdk-backend-mockingbird";
 import cloneDeep from "lodash/cloneDeep.js";
 import { getLastRenderEl } from "../../tests/testHelpers.js";
@@ -154,7 +154,7 @@ describe("PluggableHeadline", () => {
 
             const renderEl = getLastRenderEl(mockRenderFun, mockElement);
             expect(renderEl).toBeDefined();
-            expect(renderEl.type).toBe(CoreHeadline);
+            expect(renderEl.type).toBe(HeadlineWithEntireDataView);
         });
 
         it("should render headline by react to given element passing down properties when FF enableKDWidgetCustomHeight is set to true", () => {
@@ -175,7 +175,7 @@ describe("PluggableHeadline", () => {
 
             const renderEl = getLastRenderEl<ICoreChartProps>(mockRenderFun, mockElement);
             expect(renderEl).toBeDefined();
-            expect(renderEl.type).toBe(CoreHeadline);
+            expect(renderEl.type).toBe(HeadlineWithEntireDataView);
             expect(renderEl.props.config.enableCompactSize).toEqual(true);
         });
 
@@ -196,7 +196,7 @@ describe("PluggableHeadline", () => {
             );
 
             const renderEl = getLastRenderEl<ICoreChartProps>(mockRenderFun, mockElement);
-            expect(renderEl.type).toBe(CoreHeadline);
+            expect(renderEl.type).toBe(HeadlineWithEntireDataView);
             expect(renderEl.props.config.disableDrillUnderline).toEqual(true);
         });
     });

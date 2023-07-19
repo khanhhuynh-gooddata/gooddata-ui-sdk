@@ -21,7 +21,7 @@ export { PyramidChart, IPyramidChartProps, IPyramidChartBucketProps } from "./py
 
 export { Headline, IHeadlineProps, IHeadlineBucketProps } from "./headline/Headline.js";
 
-export { CoreHeadline } from "./headline/CoreHeadline.js";
+export { CoreHeadline, ICoreHeadlineProps } from "./headline/CoreHeadline.js";
 
 export { Heatmap, IHeatmapProps, IHeatmapBucketProps } from "./heatmap/Heatmap.js";
 

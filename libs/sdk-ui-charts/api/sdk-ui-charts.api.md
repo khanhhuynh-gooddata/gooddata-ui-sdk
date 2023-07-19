@@ -16,6 +16,7 @@ import { FiltersOrPlaceholders } from '@gooddata/sdk-ui';
 import { getColorMappingPredicate } from '@gooddata/sdk-ui-vis-commons';
 import { IAnalyticalBackend } from '@gooddata/sdk-backend-spi';
 import { IAttributeOrMeasure } from '@gooddata/sdk-model';
+import { IBucket } from '@gooddata/sdk-model';
 import { IColorMapping } from '@gooddata/sdk-ui-vis-commons';
 import { IColorPalette } from '@gooddata/sdk-model';
 import { Identifier } from '@gooddata/sdk-model';
@@ -55,6 +56,14 @@ export const BubbleChart: (props: IBubbleChartProps) => JSX.Element;
 // @public
 export const BulletChart: (props: IBulletChartProps) => JSX.Element;
 
+// @public (undocumented)
+export enum CalculationType {
+    CHANGE = "change",
+    CHANGE_DIFFERENCE = "change_difference",
+    DIFFERENCE = "difference",
+    RATIO = "ratio"
+}
+
 // @public
 export type ChartAlignTypes = "top" | "bottom" | "middle";
 
@@ -69,8 +78,15 @@ export const ColumnChart: (props: IColumnChartProps) => JSX.Element;
 // @public
 export const ComboChart: (props: IComboChartProps) => JSX.Element;
 
-// @internal
-export const CoreHeadline: React_2.ComponentClass<ICoreChartProps, any>;
+// @public (undocumented)
+export enum ComparisonPositionType {
+    LEFT = "left",
+    RIGHT = "right",
+    TOP = "top"
+}
+
+// @internal (undocumented)
+export const CoreHeadline: React_2.FC<ICoreChartProps & ICoreHeadlineProps>;
 
 // @internal
 export const CoreXirr: React_2.ComponentClass<ICoreChartProps, any>;
@@ -196,6 +212,7 @@ export interface IChartConfig {
     colorMapping?: IColorMapping[];
     colorPalette?: IColorPalette;
     colors?: string[];
+    comparison?: IComparison;
     continuousLine?: IContinuousLineConfig;
     dataLabels?: IDataLabelsConfig;
     dataPoints?: IDataPointsConfig;
@@ -250,6 +267,13 @@ export interface IChartLimits {
     series?: number;
 }
 
+// @public (undocumented)
+export interface IColorConfig {
+    equals?: string;
+    negative?: string;
+    positive?: string;
+}
+
 export { IColorMapping }
 
 // @public (undocumented)
@@ -288,6 +312,19 @@ export interface ICommonChartProps extends IVisualizationProps, IChartCallbacks 
     width?: number;
 }
 
+// @public (undocumented)
+export interface IComparison {
+    calculationType?: CalculationType;
+    colorConfig?: IColorConfig;
+    enabled: boolean;
+    format?: string;
+    isArrowEnabled?: boolean;
+    isSignEnabled?: boolean;
+    labelConfig?: ILabelConfig;
+    position?: ComparisonPositionType;
+    subFormat?: string;
+}
+
 // @public
 export interface IContinuousLineConfig {
     enabled?: boolean;
@@ -296,6 +333,14 @@ export interface IContinuousLineConfig {
 // @internal
 export interface ICoreChartProps extends ICommonChartProps {
     execution: IPreparedExecution;
+}
+
+// @internal (undocumented)
+export interface ICoreHeadlineProps {
+    // (undocumented)
+    buckets: IBucket[];
+    // (undocumented)
+    enableNewHeadline: boolean;
 }
 
 // @public (undocumented)
@@ -370,7 +415,9 @@ export interface IHeadlineBucketProps {
     filters?: NullableFiltersOrPlaceholders;
     placeholdersResolutionContext?: any;
     primaryMeasure: MeasureOrPlaceholder;
+    // @deprecated
     secondaryMeasure?: MeasureOrPlaceholder;
+    secondaryMeasures?: MeasureOrPlaceholder[];
 }
 
 // @public (undocumented)
@@ -389,6 +436,15 @@ export interface IHeatmapBucketProps {
 
 // @public (undocumented)
 export interface IHeatmapProps extends IBucketChartProps, IHeatmapBucketProps {
+}
+
+// @public (undocumented)
+export interface ILabelConfig {
+    equals?: string;
+    isConditional?: boolean;
+    negative?: string;
+    positive?: string;
+    unconditionalValue?: string;
 }
 
 // @public (undocumented)

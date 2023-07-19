@@ -1,7 +1,7 @@
 // (C) 2007-2023 GoodData Corporation
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import HeadlineTransformation, { IHeadlineTransformationProps } from "../HeadlineTransformation.js";
+import LegacyHeadlineTransformation from "../LegacyHeadlineTransformation.js";
 import * as headlineComponent from "../Headline.js";
 import { withIntl } from "@gooddata/sdk-ui";
 import {
@@ -17,6 +17,7 @@ import {
 } from "./HeadlineTransformation.fixtures.js";
 import noop from "lodash/noop.js";
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
+import { IHeadlineTransformationProps } from "../interfaces/HeadlineProps.js";
 
 describe("HeadlineTransformation", () => {
     let Headline = vi.spyOn(headlineComponent, "default").mockImplementation((): null => null);
@@ -26,7 +27,7 @@ describe("HeadlineTransformation", () => {
     });
 
     function createComponent(props: IHeadlineTransformationProps) {
-        const WrappedHeadlineTransformation = withIntl(HeadlineTransformation);
+        const WrappedHeadlineTransformation = withIntl(LegacyHeadlineTransformation);
         return render(<WrappedHeadlineTransformation {...props} />);
     }
 

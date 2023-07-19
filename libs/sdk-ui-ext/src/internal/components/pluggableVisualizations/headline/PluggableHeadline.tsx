@@ -9,6 +9,7 @@ import {
     MeasureGroupIdentifier,
     newDimension,
     ISettings,
+    insightBuckets,
 } from "@gooddata/sdk-model";
 
 import { BucketNames } from "@gooddata/sdk-ui";
@@ -187,15 +188,22 @@ export class PluggableHeadline extends AbstractPluggableVisualization {
 
         const { locale, custom = {}, config, customVisualizationConfig } = options;
         const { drillableItems } = custom;
+        const headlineConfig = updateConfigWithSettings(
+            { ...config, ...customVisualizationConfig },
+            this.settings,
+        );
         const execution = this.getExecution(options, insight, executionFactory);
+        const buckets = insightBuckets(insight);
 
         this.renderFun(
             <CoreHeadline
+                enableNewHeadline={this.settings.enableNewHeadline}
+                buckets={buckets}
                 execution={execution}
                 drillableItems={drillableItems}
                 onDrill={this.onDrill}
                 locale={locale}
-                config={updateConfigWithSettings({ ...config, ...customVisualizationConfig }, this.settings)}
+                config={headlineConfig}
                 afterRender={this.afterRender}
                 onLoadingChanged={this.onLoadingChanged}
                 pushData={this.pushData}

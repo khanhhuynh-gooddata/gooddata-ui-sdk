@@ -1,12 +1,12 @@
 // (C) 2007-2023 GoodData Corporation
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
-import { CoreHeadline } from "../CoreHeadline.js";
-import HeadlineTransformation from "../internal/HeadlineTransformation.js";
+import HeadlineTransformation from "../internal/LegacyHeadlineTransformation.js";
 import { ICoreChartProps } from "../../../interfaces/chartProps.js";
 import { ReferenceRecordings } from "@gooddata/reference-workspace";
 import { recordedDataFacade } from "../../../../__mocks__/recordings.js";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { CoreHeadline } from "../CoreHeadline.js";
 
 /**
  * This mock enables us to test props as parameters of the called chart function
@@ -24,7 +24,15 @@ describe("CoreHeadline", () => {
     const afterRender = vi.fn();
 
     function createComponent(props: ICoreChartProps) {
-        return render(<CoreHeadline {...props} afterRender={afterRender} drillableItems={[]} />);
+        return render(
+            <CoreHeadline
+                {...props}
+                afterRender={afterRender}
+                drillableItems={[]}
+                buckets={[]}
+                enableNewHeadline={false}
+            />,
+        );
     }
 
     const singleMeasureHeadline = recordedDataFacade(ReferenceRecordings.Scenarios.Headline.SingleMeasure);
