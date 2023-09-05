@@ -125,8 +125,8 @@ describe("ComparisonDataItem", () => {
             });
 
             const valueEl = container.querySelector(HEADLINE_VALUE_SELECTOR);
-            expect(valueEl).toHaveClass("gd-icon-arrow-up");
-            expect(valueEl).not.toHaveClass("gd-icon-arrow-down");
+            expect(valueEl).toHaveClass("gd-icon-trend-up");
+            expect(valueEl).not.toHaveClass("gd-icon-trend-down");
         });
 
         it("Should render arrow down indicator", () => {
@@ -136,8 +136,8 @@ describe("ComparisonDataItem", () => {
             });
 
             const valueEl = container.querySelector(HEADLINE_VALUE_SELECTOR);
-            expect(valueEl).not.toHaveClass("gd-icon-arrow-up");
-            expect(valueEl).toHaveClass("gd-icon-arrow-down");
+            expect(valueEl).not.toHaveClass("gd-icon-trend-up");
+            expect(valueEl).toHaveClass("gd-icon-trend-down");
         });
 
         it("Should not render arrow indicator in case item status is equals value", () => {
@@ -147,8 +147,8 @@ describe("ComparisonDataItem", () => {
             });
 
             const valueEl = container.querySelector(HEADLINE_VALUE_SELECTOR);
-            expect(valueEl).not.toHaveClass("gd-icon-arrow-up");
-            expect(valueEl).not.toHaveClass("gd-icon-arrow-down");
+            expect(valueEl).not.toHaveClass("gd-icon-trend-up");
+            expect(valueEl).not.toHaveClass("gd-icon-trend-down");
         });
 
         it("Should not render arrow indicator in case is-arrow-enabled property is a falsy value", () => {
@@ -167,8 +167,8 @@ describe("ComparisonDataItem", () => {
             });
 
             const valueEl = container.querySelector(HEADLINE_VALUE_SELECTOR);
-            expect(valueEl).not.toHaveClass("gd-icon-arrow-up");
-            expect(valueEl).not.toHaveClass("gd-icon-arrow-down");
+            expect(valueEl).not.toHaveClass("gd-icon-trend-up");
+            expect(valueEl).not.toHaveClass("gd-icon-trend-down");
         });
     });
 });

@@ -27,8 +27,8 @@ const ComparisonDataItem: React.FC<IBaseHeadlineDataItemProps> = ({ dataItem, ev
         {
             "headline-value--empty": formattedItem.isValueEmpty && !color,
             "s-headline-value--empty": formattedItem.isValueEmpty && !color,
-            "gd-icon-arrow-up": isArrowEnabled && evaluationType === EvaluationType.POSITIVE_VALUE,
-            "gd-icon-arrow-down": isArrowEnabled && evaluationType === EvaluationType.NEGATIVE_VALUE,
+            "gd-icon-trend-up": isArrowEnabled && evaluationType === EvaluationType.POSITIVE_VALUE,
+            "gd-icon-trend-down": isArrowEnabled && evaluationType === EvaluationType.NEGATIVE_VALUE,
         },
     );
 
