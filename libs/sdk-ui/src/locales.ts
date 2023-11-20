@@ -34,7 +34,7 @@ export const messages: Record<string, MessageDescriptor> = defineMessages({
     drilldownSelectHierarchy: {
         id: "configurationPanel.drillConfig.selectHierarchy",
     },
-    emtpyHierarchyInfo: { id: "configurationPanel.drillConfig.drilldown.emtpy.hierarchy.info" },
+    emptyHierarchyInfo: { id: "configurationPanel.drillConfig.drilldown.emtpy.hierarchy.info" },
     createHierarchy: { id: "configurationPanel.drillConfig.drilldown.create.hierarchy" },
     hierarchyUntitled: { id: "attributeHierarchyEditor.untitled" },
     hierarchyLevels: { id: "attributeHierarchyEditor.hierarchy.levels" },
@@ -58,6 +58,9 @@ export const messages: Record<string, MessageDescriptor> = defineMessages({
     hierarchyAttributeHowItWorksContent: { id: "attributeHierarchyEditor.howItWorks.message.content" },
     hierarchyListGenericDate: { id: "attributeHierarchyList.tooltip.generic.date.title" },
     hierarchyListGenericDateInfo: { id: "attributeHierarchyList.tooltip.generic.date.info" },
+    hierarchyCreateSuccessMessage: { id: "attributeHierarchyEditor.message.create.success" },
+    hierarchyDeleteSuccessMessage: { id: "attributeHierarchyEditor.message.delete.success" },
+    hierarchyUpdateSuccessMessage: { id: "attributeHierarchyEditor.message.update.success" },
     hierarchyListLevels: { id: "attributeHierarchyList.tooltip.hierarchy.levels" },
     hierarchyListEdit: { id: "attributeHierarchyList.tooltip.button.edit" },
     catalogAttributeHierarchyTooltip: { id: "catalog.attribute.tooltip.hierarchy.title" },

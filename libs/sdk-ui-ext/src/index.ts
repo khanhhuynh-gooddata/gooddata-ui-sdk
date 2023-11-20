@@ -51,6 +51,8 @@ export {
     WIDGET_DROPZONE_SIZE_INFO_DEFAULT,
     EmbedInsightDialog,
     IEmbedInsightDialogProps,
+    AttributeHierarchyDialog,
+    IAttributeHierarchyDialogProps,
 } from "./internal/index.js";
 
 export { provideCreateRoot, CreateRoot, Root } from "./internal/createRootProvider.js";

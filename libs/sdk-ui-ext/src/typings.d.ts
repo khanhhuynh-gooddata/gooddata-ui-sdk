@@ -9,6 +9,8 @@ declare module "*.json" {
     export default value;
 }
 
+declare module "fixed-data-table-2";
+
 declare module "custom-event" {
     export default CustomEvent;
 }

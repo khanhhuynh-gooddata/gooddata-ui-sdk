@@ -87,6 +87,11 @@ export { LabelFormatControl } from "./components/configurationControls/axis/Labe
 
 export * from "./FluidLayoutDescriptor.js";
 
+export {
+    AttributeHierarchyDialog,
+    IAttributeHierarchyDialogProps,
+} from "./components/attributeHierarchies/attributeHierarchyDialog/AttributeHierarchyDialog.js";
+
 export { EmbedInsightDialog } from "./components/dialogs/embedInsightDialog/EmbedInsightDialog.js";
 
 export type { IEmbedInsightDialogProps } from "./components/dialogs/embedInsightDialog/EmbedInsightDialog.js";

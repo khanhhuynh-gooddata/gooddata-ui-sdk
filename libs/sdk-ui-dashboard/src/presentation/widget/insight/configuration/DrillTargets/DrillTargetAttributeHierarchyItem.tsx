@@ -1,5 +1,7 @@
 // (C) 2023 GoodData Corporation
 import React from "react";
+import { useIntl } from "react-intl";
+import isEmpty from "lodash/isEmpty.js";
 import {
     areObjRefsEqual,
     ICatalogAttributeHierarchy,
@@ -8,6 +10,7 @@ import {
 } from "@gooddata/sdk-model";
 import { Dropdown, DropdownButton } from "@gooddata/sdk-ui-kit";
 import { messages } from "@gooddata/sdk-ui";
+import { AttributeHierarchyDialog } from "@gooddata/sdk-ui-ext";
 
 import { IDrillDownAttributeHierarchyConfig } from "../../../../drill/types.js";
 import {
@@ -15,13 +18,14 @@ import {
     selectCatalogAttributeHierarchies,
     useDashboardSelector,
 } from "../../../../../model/index.js";
-import { useIntl } from "react-intl";
-import isEmpty from "lodash/isEmpty.js";
 import { AttributeHierarchyList } from "./AttributeHierarchyList.js";
+import EmptyAttributeHierarchyInfo from "./EmptyAttributeHierarchyInfo.js";
+import { useAttributeHierarchy } from "./useAttributeHierarchy.js";
 
 interface IDrillTargetDashboardItemProps {
     config: IDrillDownAttributeHierarchyConfig;
     onSelect: (targetItem: ICatalogAttributeHierarchy) => void;
+    onDeleteInteraction: () => void;
 }
 
 const DROPDOWN_ALIGN_POINTS = [
@@ -44,12 +48,21 @@ const DROPDOWN_ALIGN_POINTS = [
 const DrillTargetAttributeHierarchyItem: React.FC<IDrillTargetDashboardItemProps> = ({
     config,
     onSelect,
+    onDeleteInteraction,
 }) => {
     const intl = useIntl();
     const catalogAttributeHierarchies = useDashboardSelector(selectCatalogAttributeHierarchies);
     const ignoredDrillDownHierarchies = useDashboardSelector(
         selectIgnoredDrillDownHierarchiesByWidgetRef(config.widgetRef),
     );
+    const {
+        editingAttributeHierarchy,
+        shouldDisplayAttributeHierarchyDialog,
+        onDeleteAttributeHierarchy,
+        onSaveAttributeHierarchy,
+        onOpenAttributeHierarchyDialog,
+        onCloseAttributeHierarchyDialog,
+    } = useAttributeHierarchy({ onDeleteInteraction });
 
     const attributeDescriptor = config.attributes.find(
         (attr) => attr.attributeHeader.localIdentifier === config.originLocalIdentifier,
@@ -78,7 +91,6 @@ const DrillTargetAttributeHierarchyItem: React.FC<IDrillTargetDashboardItemProps
         });
     });
 
-    const emptyHierarchyMessage = intl.formatMessage(messages.emtpyHierarchyInfo);
     const shouldShowEmptyMessage = isEmpty(existBlacklistHierarchies) && !config.complete;
     const buttonText =
         selectedCatalogAttributeHierarchy?.attributeHierarchy.title ??
@@ -86,9 +98,7 @@ const DrillTargetAttributeHierarchyItem: React.FC<IDrillTargetDashboardItemProps
     return (
         <>
             {shouldShowEmptyMessage ? (
-                <div className="drill-config-empty-hierarchy-target s-drill-config-empty-hierarchy-target">
-                    {emptyHierarchyMessage}
-                </div>
+                <EmptyAttributeHierarchyInfo onOpenAttributeHierarchyDialog={onOpenAttributeHierarchyDialog} />
             ) : (
                 <Dropdown
                     className="drill-config-hierarchy-target-select s-drill-config-hierarchy-target-select"
@@ -111,6 +121,8 @@ const DrillTargetAttributeHierarchyItem: React.FC<IDrillTargetDashboardItemProps
                         return (
                             <AttributeHierarchyList
                                 hierarchies={existBlacklistHierarchies}
+                                closeDropdown={closeDropdown}
+                                onOpenAttributeHierarchyDialog={onOpenAttributeHierarchyDialog}
                                 onSelect={(hierarchy) => {
                                     onSelect(hierarchy);
                                     closeDropdown();
@@ -120,6 +132,15 @@ const DrillTargetAttributeHierarchyItem: React.FC<IDrillTargetDashboardItemProps
                     }}
                 />
             )}
+            {shouldDisplayAttributeHierarchyDialog ? (
+                <AttributeHierarchyDialog
+                    initialAttributeRef={attributeDescriptor?.attributeHeader.formOf.ref}
+                    editingAttributeHierarchy={editingAttributeHierarchy}
+                    onClose={onCloseAttributeHierarchyDialog}
+                    onSaveOrUpdate={onSaveAttributeHierarchy}
+                    onDelete={onDeleteAttributeHierarchy}
+                />
+            ) : null}
         </>
     );
 };

@@ -2206,6 +2206,21 @@
         "comment": "Text in description section",
         "limit": 0
     },
+    "attributeHierarchyEditor.message.create.success": {
+        "value": "Great! We created the attribute hierarchy!",
+        "comment": "The toast message will be shown when the attribute hierarchy is created successfully.",
+        "limit": 0
+    },
+    "attributeHierarchyEditor.message.update.success": {
+        "value": "Great! We updated the attribute hierarchy!",
+        "comment": "The toast message will be shown when the attribute hierarchy is updated successfully.",
+        "limit": 0
+    },
+    "attributeHierarchyEditor.message.delete.success": {
+        "value": "Great! We deleted the attribute hierarchy!",
+        "comment": "The toast message will be shown when the attribute hierarchy is deleted successfully.",
+        "limit": 0
+    },
     "attributeHierarchyEditor.howItWorks.message.content": {
         "value": "Drill down interaction will be enabled to not only this visualization, but all visualization containing one of the attributes in hierarchy.",
         "comment": "Text in description section",

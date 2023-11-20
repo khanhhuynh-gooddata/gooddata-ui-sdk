@@ -1,0 +1,20 @@
+// (C) 2023 GoodData Corporation
+
+.attribute-hierarchy-dialog {
+    width: 890px;
+    height: 690px;
+
+    .gd-dialog-header {
+        height: 32px;
+
+        .gd-icon-attribute-hierarchy {
+            background-image: url("~@gooddata/sdk-ui-ext/esm/internal/assets/icons/attribute-hierarchy.svg");
+        }
+    }
+
+    .gd-dialog-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}

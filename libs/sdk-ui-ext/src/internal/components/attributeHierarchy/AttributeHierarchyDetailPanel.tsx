@@ -1,9 +1,9 @@
 // (C) 2023 GoodData Corporation
-
 import React from "react";
 import cx from "classnames";
 import { useIntl } from "react-intl";
 import { messages } from "@gooddata/sdk-ui";
+import { Button } from "@gooddata/sdk-ui-kit";
 
 /**
  *
@@ -22,6 +22,7 @@ export interface IAttributeHierarchyDetailPanelProps {
     title: string;
     description?: string;
     attributes: IAttributeHierarchyDetailItem[];
+    onEdit?: () => void;
 }
 
 /**
@@ -32,9 +33,12 @@ export const AttributeHierarchyDetailPanel: React.FC<IAttributeHierarchyDetailPa
     title,
     description,
     attributes,
+    onEdit,
 }) => {
-    const intl = useIntl();
-    const hierarchyLevelsText = intl.formatMessage(messages.hierarchyListLevels);
+    const { formatMessage } = useIntl();
+    const hierarchyLevelsText = formatMessage(messages.hierarchyListLevels);
+    const editText = formatMessage(messages.hierarchyListEdit);
+
     return (
         <div className="gd-attribute-hierarchy-detail-panel">
             <div className="gd-attribute-hierarchy-detail-title">{title}</div>
@@ -51,6 +55,14 @@ export const AttributeHierarchyDetailPanel: React.FC<IAttributeHierarchyDetailPa
                     </div>
                 );
             })}
+
+            {onEdit ? (
+                <Button
+                    className="gd-button-secondary gd-icon-edit gd-button-small"
+                    value={editText}
+                    onClick={onEdit}
+                />
+            ) : null}
         </div>
     );
 };
